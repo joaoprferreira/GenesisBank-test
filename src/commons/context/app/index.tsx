@@ -1,4 +1,4 @@
-import { ProductProvider } from "@/context/app/products/productContext"
+import { ProductProvider } from "@/commons/context/app/products/productContext"
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
