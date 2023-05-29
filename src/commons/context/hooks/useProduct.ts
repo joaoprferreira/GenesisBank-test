@@ -1,20 +1,35 @@
 import { useContext } from "react";
-import { ProductContext } from "../products/productContext";
-import { ACTIONS } from "../actions";
+import { product } from "../@types/types";
+import { CreateNewProduct } from "@/service/product";
+import { ProductContext } from "../productContext";
+import { addNewProductInCartService } from "@/service/shoppingCart";
+import { useToast } from "@chakra-ui/react";
 
 export const useProduct = () => {
-  const context = useContext(ProductContext);
-  const { state, dispatch } = context;
+  const { dispatch } = useContext(ProductContext);
+  const toast = useToast();
 
-  const getAllProducts = (payload: any) => {
+  const setNewProduct = async (newProduct: product) => {
     dispatch({
-      type: "SET_ALL_PRODUCTS",
-      payload: payload,
+      type: "SET_NEW_PRODUCT",
+      payload: newProduct,
     });
+    CreateNewProduct(newProduct);
   };
 
+  function addNewProductInCart(id?: number) {
+    addNewProductInCartService(id, 1);
+    dispatch({ type: "SET_NEW_PRODUCT_IN_CART", payload: id });
+
+    toast({
+      title: `Produto adicionado ao carrinho com sucesso!...`,
+      position: "top-left",
+      isClosable: true,
+    });
+  }
+
   return {
-    ...state,
-    getAllProducts,
+    setNewProduct,
+    addNewProductInCart,
   };
 };
