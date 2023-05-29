@@ -6,16 +6,15 @@ import { CgAdd } from 'react-icons/cg'
 export function InitialFocus() {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-
-
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
 
   return (
     <>
-      <Icon as={CgAdd} onClick={onOpen} w={10} h='auto' cursor='pointer'>Open Modal</Icon>
-
-
+      <Button onClick={onOpen} w='auto' h='auto' color={'white'} bg={'brand.700'} padding={2} gap={1}>
+        <Icon as={CgAdd} color={'white'} w={6} h="auto" />
+        Criar Produto
+      </Button>
       <Modal
         isCentered
         initialFocusRef={initialRef}
