@@ -5,4 +5,10 @@ export const initialState: InitialState = {
   currentPage: 1,
   itensPaginated: [],
   shoppingCart: [],
+  totalPriceProducts: 0,
+  isLoading: false,
+  filter: {
+    name: "",
+    category: "",
+  },
 };
