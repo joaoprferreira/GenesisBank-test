@@ -11,6 +11,8 @@ export default async function handler(req: Request, res: Response) {
       return await getProductsShoppingCart(req, res);
     case "POST":
       return await saveProductShoppingCart(req, res);
+    case "PUT":
+      return await editProduct(req, res);
     default:
       return res.status(400).send("Method not allowed");
   }
@@ -19,13 +21,14 @@ export default async function handler(req: Request, res: Response) {
 const getProductsShoppingCart = async (req: Request, res: Response) => {
   try {
     const [rows] = await dbConnection.execute<RowDataPacket[]>(
-      `SELECT c.amount, c.total, c.product_id, 
-      p.price, p.name, p.description, p.image, p.category, p.id
+      `SELECT c.amount, c.total, c.product_id, c.id, 
+      p.price, p.name, p.description, p.image, p.category
        FROM shopping_cart c
        JOIN products p ON c.product_id = p.id`
     );
 
     const carrinho = rows.map((row) => ({
+      id: row.id,
       product_id: row.product_id,
       amount: row.amount,
       total: row.total,
@@ -80,5 +83,19 @@ const saveProductShoppingCart = async (
     res
       .status(500)
       .json({ error: "Erro ao adicionar o item ao carrinho", err });
+  }
+};
+
+const editProduct = async (req: NextApiRequest, res: Response) => {
+  const { body } = req;
+  try {
+    await dbConnection.execute(
+      "UPDATE shopping_cart SET amount = ? WHERE id = ?",
+      [body.amount, body.product_id]
+    );
+
+    return res.status(204).json();
+  } catch (error: any) {
+    return res.status(500).json({ message: error });
   }
 };
