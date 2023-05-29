@@ -1,3 +1,0 @@
-export const ACTIONS = {
-  SET_ALL_PRODUCTS: "SET_ALL_PRODUCTS",
-};

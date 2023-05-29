@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ProductContext } from "../productContext";
+import { ProductContext } from "../products/productContext";
 import { ACTIONS } from "../actions";
 
 export const useProduct = () => {
@@ -8,7 +8,7 @@ export const useProduct = () => {
 
   const getAllProducts = (payload: any) => {
     dispatch({
-      type: ACTIONS.SET_ALL_PRODUCTS,
+      type: "SET_ALL_PRODUCTS",
       payload: payload,
     });
   };
