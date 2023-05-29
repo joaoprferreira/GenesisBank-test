@@ -1,6 +1,4 @@
 import { dbConnection } from '../../../config/db'
-import { useRouter } from 'next/router'
-
 import { Request, Response } from 'express'
 
 export async function query(query: any, values?: any) {
@@ -9,7 +7,6 @@ export async function query(query: any, values?: any) {
     dbConnection.end();
     return results;
   } catch (error: any) {
-    throw Error(error.message);
     return { error };
   }
 }
@@ -39,10 +36,7 @@ async function getProductSpecific(req: Request, res: Response) {
 }
 
 async function UpdateProduct(req: Request, res: Response) {
-
-  const { query: QueryParam } = useRouter()
   try {
-
     const productName = req.body.name;
     const productDescription = req.body.description;
     const productPrice = req.body.preice;
@@ -55,8 +49,6 @@ async function UpdateProduct(req: Request, res: Response) {
       image: productImage
     }
 
-    console.log("REQ::", req)
-
     await query(
       `UPDATE products SET ? WHERE id = ? `,
       [req.body, req.query.id]
@@ -68,7 +60,7 @@ async function UpdateProduct(req: Request, res: Response) {
   }
 }
 
-async function deleteProduct(req, res) {
+async function deleteProduct(req: Request, res: Response) {
   try {
     await dbConnection.query('DELETE FROM products WHERE id = ?', [req.query.id])
     return res.status(204).json()
