@@ -1,6 +1,8 @@
 import { dbConnection } from '../../../config/db'
 import { useRouter } from 'next/router'
 
+import { Request, Response } from 'express'
+
 export async function query(query: any, values?: any) {
   try {
     const [results] = await dbConnection.execute(query, values);
@@ -12,7 +14,7 @@ export async function query(query: any, values?: any) {
   }
 }
 
-export default async function handler(req, res) {
+export default async function handler(req: Request, res: Response) {
   switch (req.method) {
     case "GET":
       return await getProductSpecific(req, res);
@@ -25,7 +27,7 @@ export default async function handler(req, res) {
   }
 }
 
-async function getProductSpecific(req, res) {
+async function getProductSpecific(req: Request, res: Response) {
   try {
     const result = await dbConnection.query('SELECT * FROM products WHERE id = ?', [
       req.query.id
@@ -36,7 +38,7 @@ async function getProductSpecific(req, res) {
   }
 }
 
-async function UpdateProduct(req, res) {
+async function UpdateProduct(req: Request, res: Response) {
 
   const { query: QueryParam } = useRouter()
   try {
