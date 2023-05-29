@@ -1,17 +1,17 @@
-import { createContext, useCallback, useContext, useReducer, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useReducer, useState } from 'react'
 import Reducers from './productReducer'
-import { IProductProviderContext, IProductsContext, product } from './@types/types'
+import { IProductProviderContext, IProductsContext, filterState, product } from './@types/types'
 import { initialState } from './constants/initialStateReduce'
-// import { initialState } from './constants/initialStateReduce'
 
 export const ProductContext = createContext<IProductsContext>({} as IProductsContext)
 
-
 export const ProductProvider = ({ children }: IProductProviderContext) => {
-
-  // const [products, setProduct] = useState<product[]>([])
-
   const [product, dispatch] = useReducer(Reducers, initialState)
+  const getItemByPage = (array: any[], pageNumber: number, itemsPerPage: number) => {
+    const startIndex = (pageNumber - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    return array.slice(startIndex, endIndex)
+  }
 
   async function addAllProducts() {
     try {
@@ -20,33 +20,55 @@ export const ProductProvider = ({ children }: IProductProviderContext) => {
       dispatch({ type: 'SET_ALL_PRODUCTS', payload: data });
     } catch (error) {
       console.error('Error ao buscar api::', error)
-    } finally {
-      dispatch({ type: 'SET_NEXT_PAGE_PRODUCTS' })
     }
   }
 
-  // const removeProduct = useCallback((id: number) => {
-  //   const newListProduct = products.filter((product) => product.id !== id)
-  //   setProduct(newListProduct)
-  // }, [products])
+  const getFilterProducts = useCallback(
+    (product: product[], currentPage: number, filter: filterState) => {
+      const { name, category } = filter
+      let filteredProduct = product
 
+      if (name) {
+        filteredProduct = filteredProduct.filter((item) =>
+          item.name.toLowerCase().includes(name.toLowerCase())
+        )
+      }
 
-  // const getItemByPage = (pageNumber: number, itemsPerPage: number) => {
-  //   const startIndex = (pageNumber - 1) * itemsPerPage
-  //   const endIndex = startIndex + itemsPerPage
-  //   return product.products.slice(startIndex, endIndex)
-  // }
+      if (category) {
+        filteredProduct = filteredProduct.filter(
+          (item) => item.category.toLowerCase() === category.toLowerCase()
+        )
+      }
 
+      return filteredProduct
+    },
+    [product.currentPage]
+  )
 
-  // console.log("STATE::", state)
+  const getProductsPaginated = useCallback(
+    (products: product[], currentPage: number) => {
+      const newProducts = getItemByPage(products, currentPage, 6)
+
+      return newProducts
+    },
+    [product.currentPage]
+  )
+
+  const filteredProduct = useMemo(
+    () =>
+      getFilterProducts(product.products, product.currentPage, product.filter),
+    [product.products, product.filter, getFilterProducts]
+  )
+
 
   return (
     <ProductContext.Provider
       value={{
         product,
-        // state,
         dispatch,
+        filteredProduct,
         addAllProducts,
+        productsPaginated: getProductsPaginated(filteredProduct, product.currentPage),
 
       }}
     >
