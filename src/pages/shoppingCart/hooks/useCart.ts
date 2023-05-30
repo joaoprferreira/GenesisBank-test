@@ -41,7 +41,7 @@ export const useCart = () => {
     const newAmount = update(amount);
 
     try {
-      axios.put("http://localhost:3000/api/shoppingCart", {
+      axios.put(`${process.env.NEXT_PUBLIC_URL}/api/shoppingCart`, {
         product_id: id,
         amount: newAmount,
       });

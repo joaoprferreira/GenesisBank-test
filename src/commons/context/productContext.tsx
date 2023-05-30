@@ -10,12 +10,12 @@ export const ProductProvider = ({ children }: IProductProviderContext) => {
   const getItemByPage = (array: any[], pageNumber: number, itemsPerPage: number) => {
     const startIndex = (pageNumber - 1) * itemsPerPage
     const endIndex = startIndex + itemsPerPage
-    return array.slice(startIndex, endIndex)
+    return array?.slice(startIndex, endIndex)
   }
 
   async function addAllProducts() {
     try {
-      const response = await fetch('http://localhost:3000/api/products')
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/products`)
       const data = await response.json()
       dispatch({ type: 'SET_ALL_PRODUCTS', payload: data });
     } catch (error) {
