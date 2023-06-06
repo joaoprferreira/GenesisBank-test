@@ -1,34 +1,95 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Genesis Bank - challenge
 
-## Getting Started
+## Pré-requisitos
 
-First, run the development server:
+Certifique-se de ter as seguintes ferramentas instaladas:
+
+- Node.js
+- MySQL
+
+## Configuração
+
+1. Clone o repositório:
+
+   ```bash
+   git clone [https://github.com/seu-usuario/seu-projeto.git](https://github.com/joaoprferreira/GenesisBank-test)
+
+
+   ```
+
+### Instale as dependências do projeto:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+  npm install ou yarn
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Configure o banco de dados MySQL:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Crie um banco de dados no MySQL.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Copie o arquivo .env.example para .env:
 
-## Learn More
+```bash
+  cp .env.example .env
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Abra o arquivo .env e preencha as informações de conexão com o banco de dados:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+NEXT_PUBLIC_URL=sua api
+NEXT_PUBLIC_DB_HOST=seu-host
+NEXT_PUBLIC_DB_USER=seu-usuario
+NEXT_PUBLIC_DB_PASSWORD=sua-senha
+NEXT_PUBLIC_DB_DATABASE=seu-banco-de-dados
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Execute as migrações do banco de dados:
 
-## Deploy on Vercel
+```
+npm run migrate
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Exeute a query de criação das tabelas:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```src/database.db
+
+
+CREATE DATABASE ecommerce;
+
+use ecommerce;
+
+CREATE TABLE
+    IF NOT EXISTS products (
+        id INTEGER PRIMARY KEY AUTO_INCREMENT UNIQUE,
+        name VARCHAR(100) NOT NULL,
+        description VARCHAR(100) NOT NULL,
+        price VARCHAR(50) NOT NULL,
+        image TEXT NOT NULL,
+        category VARCHAR(45) NOT NULL
+    );
+
+CREATE TABLE
+    IF NOT EXISTS shopping_cart(
+        id INTEGER PRIMARY KEY AUTO_INCREMENT,
+        product_id INT,
+        amount INTEGER,
+        total DECIMAL(10, 2),
+        FOREIGN KEY (product_id) REFERENCES products(id)
+    )
+```
+
+Executando o Projeto
+Para iniciar o servidor de desenvolvimento, execute o seguinte comando:
+
+```
+npm run dev
+```
+
+O projeto estará disponível em http://localhost:3000.
+
+- Techs
+  - NextJS - Typescript
+  - Context-Api
+  - Chakra UI
+  - Formik
+  - MySql
