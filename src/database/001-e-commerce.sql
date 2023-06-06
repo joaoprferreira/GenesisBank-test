@@ -1,6 +1,6 @@
 -- Active: 1685132542593@@localhost@3306@crud
 
-CREATE DATABASE ecommerce IF NOT EXISTS;
+CREATE DATABASE ecommerce;
 
 use ecommerce;
 
@@ -10,15 +10,15 @@ CREATE TABLE
         name VARCHAR(100) NOT NULL,
         description VARCHAR(100) NOT NULL,
         price VARCHAR(50) NOT NULL,
-        image TEXT NOT NULL
+        image TEXT NOT NULL,
+        category VARCHAR(45) NOT NULL
     );
 
 CREATE TABLE
-    IF NOT EXISTS shoppingCart(
+    IF NOT EXISTS shopping_cart(
         id INTEGER PRIMARY KEY AUTO_INCREMENT,
         product_id INT,
-        quantity INTEGER,
+        amount INTEGER,
         total DECIMAL(10, 2),
         FOREIGN KEY (product_id) REFERENCES products(id)
     )
-describe products
